@@ -4,15 +4,15 @@ First install python 3.9 or higher version.
 And then install the requirements.txt file through the command
 
 # For windows users:
-  > install python from the original website of python
-  > Requirements installation:
-    > pip install -r requirements.txt
-  > Execution for flask
-    > python app.py
-  > Execute the html in your browser
+    install python from the original website of python
+  # Requirements installation:
+     pip install -r requirements.txt
+  # Execution for flask
+     python app.py
+Execute the html in your browser
 
 
-#For Linux users
+# For Linux users
   # Debian or debian based distros:
     sudo apt install python3
   # For creating the virtual environment on this folder
