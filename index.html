@@ -1,1 +1,145 @@
+<!--Frontend for a chatbot-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversational Image Recognition Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"], input[type="text"], button {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results-container {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        #queryResults {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Conversational Image Recognition Chatbot</h1>
+        
+        <!-- Image Upload Form -->
+        <div class="form-container">
+            <h2>Upload an Image</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="imageInput" name="image" accept="image/*" required>
+                <button type="submit">Upload Image</button>
+            </form>
+        </div>
+
+        <!-- Results Display -->
+        <div id="results" class="results-container">
+            <h2>Results</h2>
+            <p><strong>Prediction:</strong> <span id="prediction"></span></p>
+            <p><strong>Summary:</strong> <span id="wikiSummary"></span></p>
+        </div>
+
+        <!-- Query Form -->
+        <div class="form-container">
+            <h2>Ask a Question</h2>
+            <form id="queryForm">
+                <input type="text" id="queryInput" name="query" placeholder="Enter your question" required>
+                <button type="submit">Ask Question</button>
+            </form>
+        </div>
+
+        <!-- Query Answer Display -->
+        <div id="queryResults" class="results-container">
+            <h2>Query Answer</h2>
+            <p id="queryAnswer"></p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const uploadForm = document.getElementById('uploadForm');
+            const queryForm = document.getElementById('queryForm');
+
+            uploadForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(uploadForm);
+                try {
+                    const response = await fetch('http://localhost:5000/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    document.getElementById('prediction').textContent = data.prediction;
+                    document.getElementById('wikiSummary').textContent = data.wiki_summary || 'No summary available';
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            queryForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const query = document.getElementById('queryInput').value;
+                const context = document.getElementById('wikiSummary').textContent;
+
+                try {
+                    const response = await fetch('http://localhost:5000/query', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query, context })
+                    });
+                    const data = await response.json();
+
+                    document.getElementById('queryAnswer').textContent = data.answer || 'No answer available';
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
 
