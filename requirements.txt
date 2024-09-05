@@ -1,0 +1,11 @@
+flask
+flask_cors
+torch
+torchvision
+pillow
+io
+numpy
+requests
+wikipedia
+transformers
+sentence_transformers
